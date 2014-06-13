@@ -78,7 +78,9 @@ static NSString * const kCharacteristicUUID = @"4FBAF52F-925F-4958-86EF-68984BEF
         if([self.centralArray count]>0)
         {
             NSLog(@"Update value to %@", self.centralArray);
-            [self.peripheralManager updateValue:nil forCharacteristic:self.customCharacteristic onSubscribedCentrals:self.centralArray];
+            NSString *str = @"Hello Beacon";
+            NSData* data = [str dataUsingEncoding:NSUTF8StringEncoding];
+            [self.peripheralManager updateValue:data forCharacteristic:self.customCharacteristic onSubscribedCentrals:self.centralArray];
         }
     }
     
@@ -130,11 +132,11 @@ static NSString * const kCharacteristicUUID = @"4FBAF52F-925F-4958-86EF-68984BEF
     if(error == nil)
     {
         NSLog(@"add service success");
-        
-        [self.peripheralManager startAdvertising:[NSDictionary dictionaryWithObjectsAndKeys:
-                                                  @"ICServer", CBAdvertisementDataLocalNameKey,
-                                                  @[[CBUUID UUIDWithString:kServiceUUID]], CBAdvertisementDataServiceUUIDsKey,
-                                                  nil]];
+        [self.myBeaconData setValuesForKeysWithDictionary:[NSDictionary dictionaryWithObjectsAndKeys:
+                                                          @"ICServer", CBAdvertisementDataLocalNameKey,
+                                                          @[[CBUUID UUIDWithString:kServiceUUID]], CBAdvertisementDataServiceUUIDsKey,
+                                                           nil]];
+        [self.peripheralManager startAdvertising:self.myBeaconData];
     }
 }
 
