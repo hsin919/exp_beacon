@@ -11,6 +11,7 @@
 static NSString * const kUUID = @"E2C56DB5-DFFB-48D2-B060-D0F5A71096E0";
 static NSString * const kServiceUUID = @"E28E86A2-45A2-4E39-B0F0-045446794698";
 static NSString * const kCharacteristicUUID = @"4FBAF52F-925F-4958-86EF-68984BEFB5C7";
+static NSString * const serviceName = @"iPhone";
 
 @interface ViewController ()
 
@@ -35,7 +36,7 @@ static NSString * const kCharacteristicUUID = @"4FBAF52F-925F-4958-86EF-68984BEF
     self.myBeaconRegion = [[CLBeaconRegion alloc] initWithProximityUUID:uuid
                                                                   major:rand()
                                                                   minor:rand()
-                                                             identifier:@"SomeIdentifier"];
+                                                             identifier:@"com.beaconDemo"];
     
     self.centralArray = [[NSMutableArray alloc] init];
     
@@ -78,7 +79,7 @@ static NSString * const kCharacteristicUUID = @"4FBAF52F-925F-4958-86EF-68984BEF
         if([self.centralArray count]>0)
         {
             NSLog(@"Update value to %@", self.centralArray);
-            NSString *str = @"Hello Beacon";
+            NSString *str = @"Buy one iPhone6 Plus got one free !!!!";
             NSData* data = [str dataUsingEncoding:NSUTF8StringEncoding];
             [self.peripheralManager updateValue:data forCharacteristic:self.customCharacteristic onSubscribedCentrals:self.centralArray];
         }
@@ -133,7 +134,7 @@ static NSString * const kCharacteristicUUID = @"4FBAF52F-925F-4958-86EF-68984BEF
     {
         NSLog(@"add service success");
         [self.myBeaconData setValuesForKeysWithDictionary:[NSDictionary dictionaryWithObjectsAndKeys:
-                                                          @"ICServer", CBAdvertisementDataLocalNameKey,
+                                                          serviceName, CBAdvertisementDataLocalNameKey,
                                                           @[[CBUUID UUIDWithString:kServiceUUID]], CBAdvertisementDataServiceUUIDsKey,
                                                            nil]];
         [self.peripheralManager startAdvertising:self.myBeaconData];
@@ -146,6 +147,17 @@ static NSString * const kCharacteristicUUID = @"4FBAF52F-925F-4958-86EF-68984BEF
     if(![self.centralArray containsObject:central])
     {
         [self.centralArray addObject:central];
+        self.statusLabel.text = @"BUY ME!";
+    }
+}
+
+- (void)peripheralManager:(CBPeripheralManager *)peripheral central:(CBCentral *)central didUnsubscribeFromCharacteristic:(CBCharacteristic *)characteristic
+{
+    NSLog(@"%s", __FUNCTION__);
+    if([self.centralArray containsObject:central])
+    {
+        [self.centralArray removeObject:central];
+        self.statusLabel.text = @"Broadcasting...";
     }
 }
 
