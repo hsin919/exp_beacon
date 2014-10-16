@@ -14,7 +14,7 @@ static NSString * const serviceName = @"iPhone";
 ````
 
 A beacon will be created by clicking the green button.
-Message "Buy one iPhone6 Plus got one free !!!!" will be send if a central is connected to this sample app by clicking the green button again.
+Message `Buy one iPhone6 Plus got one free !!!!` will be send if a central is connected to this sample app by clicking the green button again.
 
 ````objective-c
 - (IBAction)buttonClicked:(id)sender {
